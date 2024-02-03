@@ -1,2 +1,2 @@
-# npri-db
-Scripts for accessing and copying NPRI, Stat Can, and other data
+# npri-vm
+Configurations for the web server hosting our copy of NPRI and Stat Can data
