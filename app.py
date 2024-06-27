@@ -68,7 +68,7 @@ def sqlize(view, params):
       "near" : "ST_INTERSECTS(geom,ST_Buffer(ST_Transform(ST_SetSRID(ST_MakePoint({}, {}), 4326), 3347), 10000))".format(str(keys["near"].split(",")[1]), str(keys["near"].split(",")[0])),
       "naics" : '"NACIS" in ({})'.format(','.join("%"+s+"%" for s in keys["naics"].split(","))),
       "across" : '"ProvinceID" = {}'.format(presets_pid[view][keys["across"]]),
-      "place" : '"ForwardSortationArea" in ({})'.format(','.join('\''+fsa+'\'' for fsa in keys["place"].split(","))),
+      "place" : '"ForwardSortationArea" like any (array[{}])'.format(','.join('\'%'+fsa+'%\'' for fsa in keys["place"].split(","))),
       "bounds" : 'ST_INTERSECTS(geom,ST_Transform(ST_SetSRID(ST_MakeEnvelope({}), 4326), 3347))'.format(','.join(c for c in keys["bounds"].split(","))),
       "companies" : 'lower("CompanyName") like any (array[{}])'.format(','.join('\'%'+s.lower()+'%\'' for s in keys["companies"].split(","))),
       "pollutants" : 'lower("Substance") like any (array[{}])'.format(','.join('\'%'+s.lower()+'%\'' for s in keys["pollutants"].split(","))),
