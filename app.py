@@ -52,7 +52,8 @@ def sqlize(view, params):
   #params = params #"ids=1,15,11;substance=lead,mercury;near=43.5,-80.25"
   params = params.split(";")
   keys = {"substances":"", "ids":"", "near":",", "naics":"", "across":"", "bounds":"", 
-          "place":"", "companies": "", "pollutants": "", "industries": "", "years": ","
+          "place":"", "companies": "", "pollutants": "", "industries": "", "years": ",",
+          "within":""
           }
   passed_keys = []
   for p in params:
@@ -73,7 +74,8 @@ def sqlize(view, params):
       "companies" : 'lower("CompanyName") like any (array[{}])'.format(','.join('\'%'+s.lower()+'%\'' for s in keys["companies"].split(","))),
       "pollutants" : 'lower("Substance") like any (array[{}])'.format(','.join('\'%'+s.lower()+'%\'' for s in keys["pollutants"].split(","))),
       "industries" : 'lower("NAICSTitleEn") like any (array[{}])'.format(','.join('\'%'+s.lower()+'%\'' for s in keys["industries"].split(","))),
-      "years" : '"ReportYear" >= {} and "ReportYear" <= {}'.format(keys["years"].split(",")[0], keys["years"].split(",")[1])
+      "years" : '"ReportYear" >= {} and "ReportYear" <= {}'.format(keys["years"].split(",")[0], keys["years"].split(",")[1]),
+      "within": '"dauid" = any (array[{}])'.format(','.join(str(da) for da in keys["within"].split(",")))
   }
   print("sqls", sqls)
   for pk in passed_keys:
